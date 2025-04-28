@@ -88,12 +88,15 @@ jobs:
       shell: bash
       run: |
         expected_lines=(
-          '*** Non-atomic build ***'
-          '--- basic lifecycle ---'
-          'arr[2] = 3'
-          '--- swap and move ---'
-          'All tests finished.'
-          )
+        '*** Non‑atomic build ***'
+        '--- basic lifecycle ---'
+        'Foo(42) constructed'
+        'use_count = 1'
+        'after copy, use_count = 2'
+        'p->value = 99'
+        'use_count after q dies = 1'
+        'Foo(99) destroyed'
+        )
           for line in "${expected_lines[@]}"; do
           if ! grep -Fxq "$line" program_output.txt; then
             echo "::error::Output is missing expected line: $line"
