@@ -91,7 +91,7 @@ jobs:
       shell: bash
       run: |
         expected_lines=(
-        '*** Non-atomic build ***'
+        '*** Non‑atomic build ***'
         '--- basic lifecycle ---'
         'arr[2] = 3'
         '--- swap and move ---'
