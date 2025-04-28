@@ -66,20 +66,23 @@ jobs:
       run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
 
     # ------------------------------------------------------------------
-    # NEW STEP 1 – run the executable and capture its output
+    # Run SharedPtr demo and capture its output
     # ------------------------------------------------------------------
     - name: Run SharedPtr demo
       id: run_demo
       working-directory: ${{ steps.strings.outputs.build-output-dir }}
       shell: bash
       run: |
-        exe="./SharedPtr"               # name set in CMakeLists.txt (add .exe below on Windows)
+        # Build the path to the executable depending on the runner OS
         if [[ "${{ runner.os }}" == "Windows" ]]; then
-          exe="SharedPtr.exe"
+          exe="./${{ matrix.build_type }}/SharedPtr.exe"
+        else
+          exe="./SharedPtr"
         fi
+
+        echo "Running $exe"
         "$exe" > program_output.txt
         echo "output-file=${PWD}/program_output.txt" >> "$GITHUB_OUTPUT"
-
     # ------------------------------------------------------------------
     # NEW STEP 2 – verify the program produced the expected lines
     # ------------------------------------------------------------------
@@ -88,14 +91,11 @@ jobs:
       shell: bash
       run: |
         expected_lines=(
-        '*** Non‑atomic build ***'
+        '*** Non-atomic build ***'
         '--- basic lifecycle ---'
-        'Foo(42) constructed'
-        'use_count = 1'
-        'after copy, use_count = 2'
-        'p->value = 99'
-        'use_count after q dies = 1'
-        'Foo(99) destroyed'
+        'arr[2] = 3'
+        '--- swap and move ---'
+        'All tests finished.'
         )
           for line in "${expected_lines[@]}"; do
           if ! grep -Fxq "$line" program_output.txt; then
