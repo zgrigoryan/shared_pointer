@@ -91,14 +91,14 @@ jobs:
       shell: bash
       run: |
         expected_lines=(
-        '*** Non‑atomic build ***'
-        '--- basic lifecycle ---'
-        'arr[2] = 3'
-        '--- swap and move ---'
-        'All tests finished.'
+          '*** Non‑atomic build ***'
+          '--- basic lifecycle ---'
+          'arr[2] = 3'
+          '--- swap and move ---'
+          'All tests finished.'
         )
-          for line in "${expected_lines[@]}"; do
-          if ! grep -Fxq "$line" program_output.txt; then
+        for line in "${expected_lines[@]}"; do
+          if ! grep -Fxq -- "$line" program_output.txt; then
             echo "::error::Output is missing expected line: $line"
             echo '---- Actual output ----'
             cat program_output.txt
